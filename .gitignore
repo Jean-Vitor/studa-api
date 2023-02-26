@@ -131,3 +131,4 @@ dist
 
 pgdata
 docker-compose.yml
+.idea/
