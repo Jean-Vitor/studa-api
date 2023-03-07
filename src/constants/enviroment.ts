@@ -13,3 +13,9 @@ export const REFRESH_TOKEN_SECRET: string = process.env.REFRESH_TOKEN_SECRET!;
 export const CONFIRMATION_TOKEN_SECRET: string = process.env.CONFIRMATION_TOKEN_SECRET!;
 export const REFRESH_TOKEN_EXPIRES_IN_SECONDS: string = process.env.REFRESH_TOKEN_EXPIRES_IN_SECONDS!;
 export const ACCESS_TOKEN_EXPIRES_IN_SECONDS: string = process.env.ACCESS_TOKEN_EXPIRES_IN_SECONDS!;
+
+export const SMTP_HOST = process.env.SMTP_HOST!;
+export const SMTP_PORT = Number(process.env.SMTP_PORT!);
+export const SMTP_USER = process.env.SMTP_USER!;
+export const SMTP_PASSWORD = process.env.SMTP_PASSWORD!;
+export const SMTP_FROM = process.env.SMTP_FROM!;
