@@ -47,7 +47,7 @@ class EmailWorker {
         console.log('email sent ', templateKey, 'to', to);
       } catch (error) {
         // Log the error and/or retry the job
-        console.error('Error sending email', error);
+        console.error('error sending email', error);
         throw error;
       }
     });

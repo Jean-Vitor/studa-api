@@ -1,10 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import UserRepository from '../repositories/UserRepository';
-import jwt from 'jsonwebtoken';
-import { CONFIRMATION_TOKEN_SECRET } from '../constants/enviroment';
 import ConfirmationTokenRepository from '../repositories/ConfirmationTokenRepository';
-import { TokenPayload } from '../middlewares/auth';
 import ConfirmationTokenService from '../services/ConfirmationTokenService';
 
 class UserController {
@@ -49,53 +46,24 @@ class UserController {
 
   async confirm(req: Request, res: Response) {
     const {
-      confirmationToken
+      confirmationCode
     } = req.body;
 
     try {
 
-      const {
-        exp
-      } = jwt.decode(confirmationToken) as TokenPayload;
-
-      const now = Date.now() / 1000;
-
-      if (exp < now) {
-        const {
-          userId
-        } = jwt.verify(confirmationToken, CONFIRMATION_TOKEN_SECRET, {ignoreExpiration: true}) as TokenPayload;
-
-        console.log(userId);
-
-        await ConfirmationTokenRepository.delete(userId);
-
-        await ConfirmationTokenService.create({
-          userId
-        })
-
-        return res.status(202)
-          .json({
-            message: 'Your code has expired, but has been recreated and sent by email.',
-            slug: 'TOKEN_EXPIRED_AND_RECREATED'
-          });
-      }
-
-      const {
-        userId
-      } = jwt.verify(confirmationToken, CONFIRMATION_TOKEN_SECRET) as TokenPayload;
-
-      const token = await ConfirmationTokenRepository.findOne({
-        token: confirmationToken,
-        userId: userId
-      });
+      const token = await ConfirmationTokenRepository.findOne({ token: confirmationCode });
 
       if (!token) {
         return res.sendStatus(400);
       }
 
-      await ConfirmationTokenRepository.delete(userId);
+      const { user_id } = token;
 
-      await UserRepository.activate(userId);
+      //TODO verificar a expiração do token - 10 minutos
+
+      await ConfirmationTokenRepository.delete(user_id);
+
+      await UserRepository.activate(user_id);
 
       return res.sendStatus(200);
     } catch (e: any) {

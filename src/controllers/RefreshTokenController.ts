@@ -70,7 +70,6 @@ class RefreshTokenController {
         });
     }
   }
-
 }
 
 export default new RefreshTokenController();

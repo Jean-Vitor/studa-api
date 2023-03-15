@@ -9,14 +9,12 @@ class ConfirmationTokenRepository {
 
   async findOne({
     token,
-    userId
-  }: Payload) {
+  }: { token: string }) {
     const [row] = await db.query(`
       SELECT *
       FROM confirmation_tokens
       WHERE confirmation_tokens.confirmation_token = $1
-        AND confirmation_tokens.user_id = $2
-    `, [token, userId]);
+    `, [token]);
 
     return row;
   }
