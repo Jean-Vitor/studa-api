@@ -1,17 +1,14 @@
-import jwt from 'jsonwebtoken';
-import { CONFIRMATION_TOKEN_SECRET } from '../constants/enviroment';
 import ConfirmationTokenRepository from '../repositories/ConfirmationTokenRepository';
 import EmailWorker from '../workers/EmailWorker';
 import UserRepository from '../repositories/UserRepository';
 import { TemplateKey } from '../templates';
+import generateConfirmationCode from '../utils/generateConfirmationCode';
 
 class ConfirmationTokenService {
   async create({
     userId
   }: { userId: string }) {
-    const confirmationToken = jwt.sign({
-      userId
-    }, CONFIRMATION_TOKEN_SECRET, { expiresIn: '10m' });
+    const confirmationToken = generateConfirmationCode(userId);
 
     await ConfirmationTokenRepository.create({
       token: confirmationToken,
